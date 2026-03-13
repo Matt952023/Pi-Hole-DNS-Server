@@ -1,2 +1,2 @@
-# Pi-Hole-DNS-Server
-Raspberry Pi DNS Server with Pi-Hole and Unbound.
+# Abstract
+This project focuses on understanding how DNS servers operate by converting two Raspberry PIs into functional DNS servers. This is accomplished by utilizing Pi-Hole for its DNS, filtering, and logging capabilities paired with Unbound, a recursive, DNSSEC-validating resolver. The DNS servers run on an internal network, so clients had to be manually configured to use the Pi-Hole resolvers. Two Raspberry PIs are used with one as redundancy; A failover test was performed to test both resolvers. Forward and reverse internal resolution was observed after successfully configuring the PIs and connecting a client to the DNS server. Subsequent query logging was performed as the client used the DNS server. This project provided valuable newfound skills in configuration, troubleshooting, and reliability testing.
