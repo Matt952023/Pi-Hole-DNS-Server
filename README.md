@@ -217,27 +217,29 @@ To install Pi-hole, the follow command can be used:
 
 When installing Pi-hole, an installation wizard will appear on the terminal screen. The first statement from the wizard is that the installer will transform the device into a network-wide ad blocker:
 
-![](images/image1.png)
+![](images/image3.png)
 
 Furthermore, the Pi-hole installation process will warn the user that a static IP address is needed and will allow the user to exit installation to fix this issue if needed:
 
-![][image2]
+![](images/image10.png)
 
 Next, Pi-hole will ask for the interface that the Pi-hole will run through. I selected wlan0 or the wireless interface because I am not using Pi-hole through the physical ethernet connection (eth0). For me, it is more convenient to connect the device wirelessly to the DNS server.  
    
-![][image3]
+![](images/image1.png)
 
 Pi-hole will inquire the user if they would like to use a third-party list to block ads. This third part list in particular is StevenBlack’s Unified Hosts List, a community maintained list of blocked domains. If a device on the network tries to resolve to one of those domains, then Pi-hole stop the DNS lookup. If you are interested in setting a default list of domains to be blocked, then select ‘Yes’ on the installation wizard.  
-![][image4]  
+
+![](images/image4.png) 
+
 When asked to enable query logging, select “Yes” because this allows us to record the DNS queries made by clients on the network. This is useful for troubleshooting DNS resolution and filtering behavior.   
-![][image5]
+
+![](images/image19.png)
 
 This window asks the user for the level of privacy for users on the FTL (Faster Than Light) DNS server. FTL handles DNS, statistics, and query logs. I selected “Show everything” so that I can fully observe DNS queries that occur through the Pi-hole server.  
-![][image6]
+
+![](images/image15.png)
 
 When going through the installation setup wizard, there is a page that asks for the Upstream DNS provider. You can select any DNS provider because we will be replacing that DNS provider with Unbound.
-
-![][image7]
 
 Once all the configurations have been made, the window will display “Installation Complete\!” with further instructions to access the web interface at the posted link. An Admin Webpage login password is provided, but this password can be changed using the command:
 
@@ -247,11 +249,12 @@ Once all the configurations have been made, the window will display “Installat
 
 Before testing the Pi-hole DNS capabilities, I first accessed the web interface to add local DNS records. This can be done by typing in `http://<Static IP>/admin` where `<Static IP>` is the static IP of the Raspberry Pi with Pi-hole installed. Enter the password that was sent in the Raspberry Pi terminal to access the main dashboard.
 
-![][image8]  
-![][image9]
+![](images/image13.png)
+![](images/image21.png)
 
 To locate, head to Settings → Local DNS records where we can find the list of local DNS records:  
-![][image10]
+
+![](images/image12.png)
 
 Here, we can enter the domain name and its corresponding IP address. Local DNS records are names created for devices within the local network. These records do not exist on the wider internet and usually point to private IP addresses such as `192.168.x.x`. The domain, `home.arpa`, is a special domain reserved for home networks and helps avoid conflicts with real public domains. In this screenshot, I have set domain names for both Raspberry Pi DNS servers.
 
@@ -553,7 +556,7 @@ In addition, we can use the `ss` command to view all listening sockets similar t
   * In this case, filter the output to lines containing `:53`
 
 **The output should look something like this:**  
-![][image11]
+![](images/image5.png)
 
 * The output should indicate that Pi-Hole FTL is listening on port 53  
   * `0.0.0.0:53` means it accepts DNS requests on all IPv4 interfaces  
@@ -566,7 +569,7 @@ In addition, we can use the `ss` command to view all listening sockets similar t
 * Similar to the previous command, but we are looking for port 5335 or localhost
 
 **The output of this command should look like this:**  
-![][image12]
+![](images/image8.png)
 
 * the **Unbound process** owns port `5335` and is listening for both:  
   * **UDP** DNS traffic  
@@ -588,17 +591,17 @@ We can view the status of Unbound and note any issues using `journalctl`:
 
 Inside the Pi-hole dashboard, accessible by typing `http://<Static IP>/admin` into the web browser, we will be able to connect Unbound to Pi-hole by heading from Settings → DNS.  
    
-![][image13]
+![](images/image14.png)
 
 Here we will uncheck any upstream DNS server because we want to Unbound as our upstream DNS server.
 
-![][image14]
+![](images/image16.png)
 
 Below the list of provided upstream DNS servers is an entry box for custom DNS servers. Here, we will list the IP and port number of our Unbound DNS server in the format shown above. Once that is finished, we can test our DNS server setting a device’s DNS to our Pi-hole servers. 
 
 For Windows 11 devices, we can head to Settings → Network & Wi-Fi → Wi-Fi → Hardware Properties and select “Edit” for DNS server assignment. There we set DNS settings to “Manual” and manually add the IP addresses that correspond to our Pi-hole servers.
 
-![][image15]
+![](images/image7.png)
 
 If Pi-hole is truly working and can resolves queries sent by clients, then using a command such as:
 
@@ -612,7 +615,7 @@ Additionally, using commands such as:
 `nslookup google.com 192.168.12.11`
 
 Will also work in testing the Pi-hole servers are resolving queries properly. For example:  
-![][image16]
+![](images/image17.png)
 
 * Shows that both Pi-hole servers are properly communicating
 
@@ -635,20 +638,20 @@ Once the service is stopped we can run “nslookup example.com” from our devic
 
 # **Results**
 
-![][image17]  
-![][image18]
+![](images/image9.png)
+![](images/image11.png)
 
 The Pi-hole dashboards above confirm that both DNS servers are active and handling live client traffic. It shows the total number of DNS queries received, how many were blocked by the configured blocklists, and the percentage of filtered requests. The graphs also demonstrate activity over time, which helped verify that clients on the network were successfully using the Raspberry Pi as their DNS resolver.
 
-![][image19]
+![](images/image2.png)
 
 The “Top Blocked Domains” panel shows domains that were most frequently blocked by Pi-hole. Many of these were advertising, tracking, or analytics endpoints, demonstrating that the DNS sinkhole was successfully preventing unwanted third-party requests from resolving on the network.
 
-![][image20]
+![](images/image20.png)
 
 The query type chart above shows the mix of DNS record types handled by the server, including IPv4 host lookups (A), IPv6 lookups (AAAA), and reverse DNS queries (PTR). This helped confirm that the resolver was handling normal client DNS behavior across different request types. In the other pie chart, Upstream servers show that a majority of the queries were sent to Unbound (localhost\#5335) or was answered by a stored cache (no upstream required). The other upstream servers, 8.8.4.4\#53 and 8.8.8.8\#53, are Google’s DNS servers before switching to Unbound.
 
-![][image21]
+![](images/image6.png)
 
 This chart showing query types and upstream servers is from the second, backup Raspberry Pi DNS server where Google was not used. Here, we can see that the only upstream server is Unbound and the rest are withered queries answered by Pi-hole’s cache or was a blocked domain.
 
