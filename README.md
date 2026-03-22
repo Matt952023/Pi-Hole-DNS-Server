@@ -217,7 +217,7 @@ To install Pi-hole, the follow command can be used:
 
 When installing Pi-hole, an installation wizard will appear on the terminal screen. The first statement from the wizard is that the installer will transform the device into a network-wide ad blocker:
 
-![][image1]
+![](images/image1.png)
 
 Furthermore, the Pi-hole installation process will warn the user that a static IP address is needed and will allow the user to exit installation to fix this issue if needed:
 
